@@ -1,0 +1,197 @@
+*, *:after, *:before {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+/* =========================================================
+                   Declare colors, fonts
+   ========================================================= */
+/* body */
+/* grid */
+/* buttons */
+/* =====================================
+             Main Body Elements
+   ===================================== */
+body {
+  background-color: #ffffff;
+  font-family: "Lato", Calibri, Arial, sans-serif;
+  color: #010101;
+  text-align: center;
+}
+
+/* =====================================
+                 Buttons
+   ===================================== */
+button {
+  font-family: inherit;
+  font-size: 2.0em;
+  letter-spacing: 1px;
+  font-weight: 700;
+  text-transform: uppercase;
+  display: inline-block;
+  margin: 15px 30px;
+  width: 150px;
+  padding: 15px 0;
+  text-align: center;
+  position: relative;
+  /* style */
+  background: #5fa2d9;
+  box-shadow: 0 6px #5692C3;
+  color: #fff;
+  border-radius: 20px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+
+.add {
+  background: #08A767;
+  box-shadow: 0 6px #07965D;
+}
+
+.sub {
+  background: #F75A49;
+  box-shadow: 0 6px #DE5142;
+}
+
+button:hover {
+  top: 2px;
+  box-shadow: 0 4px #5692C3;
+}
+
+button:active {
+  top: 6px;
+  box-shadow: 0 0 #5692C3;
+}
+
+button.add:hover {
+  box-shadow: 0 4px #07965D;
+}
+
+button.sub:hover {
+  box-shadow: 0 4px #DE5142;
+}
+
+button.add:active {
+  box-shadow: 0 0 #07965D;
+}
+
+button.sub:active {
+  box-shadow: 0 0 #DE5142;
+}
+
+/* =====================================
+                   Grid
+   ===================================== */
+.grid {
+  background: none;
+  border: none;
+  text-align: center;
+  margin-bottom: 50px;
+  margin-top: 50px;
+  width: 100%;
+}
+
+.grid:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.cell {
+  background-color: #ff0000;
+  border: none;
+  float: left;
+  padding: 5px;
+  width: 12.5%;
+  height: 7em;
+  color: #ffffff;
+  font-size: 0.75em;
+  padding-top: 5.25em;
+  position: relative;
+  overflow: hidden;
+}
+
+/* =====================================
+                Cell Menus
+   ===================================== */
+.cell_menu {
+  width: 100%;
+  height: 2em;
+  padding-top: 0.2em;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: rgba(255, 255, 255, 0.5);
+  font-size: 1.5em;
+  text-align: center;
+}
+
+/* to use on very light colors */
+.cell_menu.dark {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.cell_menu .btn {
+  width: 1.7em;
+  height: 1.7em;
+  padding-top: 0.25em;
+  background-color: #ffffff;
+  border-radius: 25%;
+  color: #000000;
+  cursor: pointer;
+  display: inline-block;
+}
+
+#test .cell .cell_menu {
+  /* height: 100px; */
+  width: 100%;
+  top: 0;
+  opacity: 0;
+  -webkit-transform: translateY(-100%);
+  -moz-transform: translateY(-100%);
+  -ms-transform: translateY(-100%);
+  transform: translateY(-100%);
+  -webkit-transition: -webkit-transform 0.4s, opacity 0.1s 0.3s;
+  -moz-transition: -moz-transform 0.4s, opacity 0.1s 0.3s;
+  transition: transform 0.4s, opacity 0.1s 0.3s;
+}
+
+#test .cell:hover .cell_menu {
+  opacity: 1;
+  -webkit-transform: translateY(0px);
+  -moz-transform: translateY(0px);
+  -ms-transform: translateY(0px);
+  transform: translateY(0px);
+  -webkit-transition: -webkit-transform 0.4s, opacity 0.1s;
+  -moz-transition: -moz-transform 0.4s, opacity 0.1s;
+  transition: transform 0.4s, opacity 0.1s;
+}
+
+/* =====================================
+               Saved Scales
+   ===================================== */
+#saved_scales .grid {
+  margin: 5px 0px;
+}
+
+/* =====================================
+              Misc. Classes
+   ===================================== */
+.hidden {
+  display: none;
+}
+
+#credit {
+  margin-top: 5.0em;
+}
+
+ul {
+  margin: 0;
+}
+
+ul li {
+  display: inline-block;
+  margin-right: 2.2em;
+}

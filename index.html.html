@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Color Scale</title>
+    <link rel='stylesheet' type='text/css' href='assets/color-scale.css'/>
+    <link href="assets/favicon.ico" rel="icon" type="image/x-icon" />
+    <link rel='stylesheet' type='text/css' href='//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css'/>
+    <link rel='stylesheet' type='text/css' href='https://rawgit.com/josedvq/colpick-jQuery-Color-Picker/master/css/colpick.css'/>
+    <script type='text/javascript' src='http://code.jquery.com/jquery-2.1.0.min.js'></script>
+    <script type='text/javascript' src='//cdnjs.cloudflare.com/ajax/libs/chroma-js/0.5.7/chroma.min.js'></script>
+    <script type='text/javascript' src='https://rawgit.com/josedvq/colpick-jQuery-Color-Picker/master/js/colpick.js'></script>
+    <script type='text/javascript' src='js/color-scale.js'></script>
+  </head>
+  <body>
+    <h1>make a color scale</h1>
+    <h5>hover over the middlemost cell to change the colors</h5>
+    <div class='grid' id='test'>
+      <div class='cell'>
+        <div class='cell_code'></div>
+      </div>  
+      <div class='cell' id="center_color">
+        <div class='cell_menu'>
+          <div class='btn randomize'>
+            <i class='fa fa-random'></i>
+          </div>
+          <div class='btn pick_color'>
+            <i class='fa fa-eyedropper'></i>
+          </div>
+        </div>
+        <div class='cell_code'></div>
+      </div>
+      <div class='cell'>
+        <div class='cell_code'></div>
+      </div>
+    </div>
+    <div class="container" id="toolbar">
+      <button class='add' id='add_cell'>
+        <i class='fa fa-plus'></i>
+      </button>
+      <button class='sub' id='sub_cell'>
+        <i class='fa fa-minus'></i>
+      </button>
+      <button id='save_scale'>
+        <i class='fa fa-floppy-o'></i>
+      </button>
+      <h5>add/remove cells OR save scale below</h5>
+    </div>
+    <div class="container">
+      
+      <button class="output" id="out-scss">
+        scss
+      </button>
+      <button class="output" id="out-dash">
+        dashed
+      </button>
+      <button class="output" id="out-list">
+        list
+      </button>
+      <input readonly id="scale-output"/>
+    </div>
+    <div class='container' id='saved_scales'>
+      <h1>Saved Scales:</h1>
+    </div>
+    <div class='container' id='credit'>
+      <h3>Thanks to:</h3>
+      <ul>
+        <li>
+          <a href='https://github.com/gka/chroma.js'>Chroma.js</a>
+          for the color blending!
+        </li>
+        <li>
+          <a href='http://colpick.com/plugin'>colpick</a>
+          for the color picker dialog box!
+        </li>
+        <li>
+          <a href='http://fortawesome.github.io/'>font-awesome</a>
+          for the icons!
+        </li>
+      </ul>
+    </div>
+  </body>
+</html>
