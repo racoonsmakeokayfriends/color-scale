@@ -116,7 +116,7 @@ button.sub:active {
 /* =====================================
                 Cell Menus
    ===================================== */
-.cell_menu {
+.cell-menu {
   width: 100%;
   height: 2em;
   padding-top: 0.2em;
@@ -129,11 +129,11 @@ button.sub:active {
 }
 
 /* to use on very light colors */
-.cell_menu.dark {
+.cell-menu.dark {
   background-color: rgba(0, 0, 0, 0.2);
 }
 
-.cell_menu .btn {
+.cell-menu-btn {
   width: 1.7em;
   height: 1.7em;
   padding-top: 0.25em;
@@ -144,7 +144,7 @@ button.sub:active {
   display: inline-block;
 }
 
-#test .cell .cell_menu {
+.cell-menu {
   /* height: 100px; */
   width: 100%;
   top: 0;
@@ -158,7 +158,7 @@ button.sub:active {
   transition: transform 0.4s, opacity 0.1s 0.3s;
 }
 
-#test .cell:hover .cell_menu {
+.cell-middle:hover .cell-menu {
   opacity: 1;
   -webkit-transform: translateY(0px);
   -moz-transform: translateY(0px);

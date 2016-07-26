@@ -1,15 +1,16 @@
 $(document).ready(function() {
-  var color = '#21313e';
+  var color = '#a4899d';
 
   function update_scale() {
     var num_cells = $('#test .cell').length;
-    console.log(color);
     // adjust colors
     var dark = chroma(color).darken();
     var light = chroma(color).brighten();
+    console.log(dark.hex());
+    console.log(light.hex());
     
     // check if the lightness of the end colors requires a 'dark' menu
-/*    if (chroma(color).luminance() > 0.7) {
+    /*if (chroma(color).luminance() > 0.7) {
       $('#test #center_color .cell_menu').addClass('dark');
     }
     else {
@@ -23,6 +24,13 @@ $(document).ready(function() {
     var light_scale = chroma.scale([color, light]);
     var scale = chroma.scale([dark,light]);
     var $jq,c;
+    for (var i=0;i<num_cells;i++) {
+      $jq = $('#test .cell:nth-child('+(i+1).toString()+')');
+      $jq.css("background", dark_scale(i / (num_cells-1)).hex());
+      $jq.children('.cell_code').html(dark_scale(i / (num_cells-1)).hex());
+    }
+
+
     for (var i=0;i<num_cells;i++) {
       $jq = $('#test .cell:nth-child('+(i+1).toString()+')');
       $jq.css("background", dark_scale(i / (num_cells-1)).hex());
@@ -64,7 +72,7 @@ $(document).ready(function() {
     }    
   });
 
-  // get output
+  // get output //refactor
   $('.output').click(function() {
     var output_txt = '';
     var scale = [];
