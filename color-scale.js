@@ -1,137 +1,219 @@
-$(document).ready(function() {
-  var color = '#a4899d';
-
-  function update_scale() {
-    var num_cells = $('#test .cell').length;
-    // adjust colors
-    var dark = chroma(color).darken();
-    var light = chroma(color).brighten();
-    console.log(dark.hex());
-    console.log(light.hex());
-    
-    // check if the lightness of the end colors requires a 'dark' menu
-    /*if (chroma(color).luminance() > 0.7) {
-      $('#test #center_color .cell_menu').addClass('dark');
-    }
-    else {
-      $('#test #center_color .cell_menu').removeClass('dark');
-    }*/
-    
-    // adjust widths
-    $('#test .cell').css('width',(1/num_cells*100).toString() + '%');
-    
-    var dark_scale = chroma.scale([dark, color]);
-    var light_scale = chroma.scale([color, light]);
-    var scale = chroma.scale([dark,light]);
-    var $jq,c;
-    for (var i=0;i<num_cells;i++) {
-      $jq = $('#test .cell:nth-child('+(i+1).toString()+')');
-      $jq.css("background", dark_scale(i / (num_cells-1)).hex());
-      $jq.children('.cell_code').html(dark_scale(i / (num_cells-1)).hex());
-    }
-
-
-    for (var i=0;i<num_cells;i++) {
-      $jq = $('#test .cell:nth-child('+(i+1).toString()+')');
-      $jq.css("background", dark_scale(i / (num_cells-1)).hex());
-      $jq.children('.cell_code').html(dark_scale(i / (num_cells-1)).hex());
-    }
-  }
+$(document).ready(function () {
   
-  function get_random_color() {
-    var letters = '0123456789ABCDEF'.split('');
-    var color = '#';
-    for (var i = 0; i < 6; i++ ) {
-        color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
-  }
-  
-  function init() {
-    update_scale();
-  }
-  
-  init();  
+  /* ------------------------------------------------------- MODEL*/
+  var model = {
 
-  // add a cell
-  $('#add_cell').click(function() {    
-    var cell_html = '<div class="cell">';
-    cell_html += '<div class="cell_code"></div>';
-    cell_html += '</div>';
-    $('#test .cell:last').before(cell_html);
-    $('#test .cell:first').after(cell_html);
-    update_scale();
-  });
+    init: function() {
+      this.numSteps = 2;
+      this.centerColor = '#a4899d';
+      this._updateColorScales();
+    },
 
-  // remove a cell
-  $('#sub_cell').click(function() {
-    if ($('#test .cell').length > 3) {
-      $('#test .cell:nth-last-child(2)').remove();
-      $('#test .cell:nth-child(2)').remove();
-      update_scale();
-    }    
-  });
+    _updateColorScales: function () {      
+      this.darkColor = chroma(this.centerColor).darken().hex();
+      this.lightColor = chroma(this.centerColor).brighten().hex();
 
-  // get output //refactor
-  $('.output').click(function() {
-    var output_txt = '';
-    var scale = [];
-    var $self = $(this);
-    $('#test .cell').each(function() {
-      var cell_hex = chroma($(this).css('background-color')).hex();
-      scale.push(cell_hex);
-    });
+      this.darkScale = chroma.scale([this.darkColor, this.centerColor]);
+      this.lightScale = chroma.scale([this.lightColor, this.centerColor]);
+
+    },
+
+    getDarkScale: function () {
+      return this.darkScale;
+    },
     
-    // scss
-    if ($self.attr('id') == 'out-scss') {
-      for (var i=0;i<scale.length;i++) {
-        output_txt += '$c'+i.toString()+': '+scale[i]+';';
-      }      
-    }
-    
-    // dashed
-    if ($self.attr('id') == 'out-dash') {
-      for (var i=0;i<scale.length;i++) {
-        output_txt += scale[i].slice(1,scale[i].length)+'-';
+    getLightScale: function () {
+      return this.lightScale;
+    },
+
+    getCenterColor: function () {
+      return this.centerColor;
+    },
+
+    getNumSteps: function () {
+      return this.numSteps;
+    },
+
+
+
+
+    setCenterColor: function(c) {
+      this.centerColor = c;
+      this._updateColorScales();
+    },
+
+    randomizeCenterColor: function () {      
+      var letters = '0123456789ABCDEF'.split('');
+      var color = '#';
+      for (var i = 0; i < 6; i++ ) {
+          color += letters[Math.floor(Math.random() * 16)];
       }
-      output_txt = output_txt.slice(0,output_txt.length - 1);      
-    }
-    
-    // list of strings
-    if ($self.attr('id') == 'out-list') {
-      for (var i=0;i<scale.length;i++) {
-        output_txt += '"'+scale[i]+'",';
+      this.centerColor = color;
+      this._updateColorScales();
+    },
+
+    addStep: function () {
+      this.numSteps += 1;
+    },
+
+    subStep: function () {
+      if (this.numSteps > 1) {
+        this.numSteps -= 1;
       }
-      output_txt = output_txt.slice(0,output_txt.length - 1);
+      else {
+        this.numSteps = 1;
+      }
     }
-    
-    $('#scale-output').val(output_txt);
-  });
-      
-  // 'save' a scale
-  $('#save_scale').click(function() {
-    var $scale = $('#test').clone().removeAttr('id');
-    $scale.children('#center_color').children('.cell_menu').remove();
-    $('#saved_scales').append($scale);    
-  }); 
-  
-  // randomize colors
-  $('#test .cell .randomize').click(function() {
-    color = get_random_color();
-    update_scale();
-  });
-  
-  // creates a color picker dialog
-  $('#test .cell .pick_color').colpick({
-    color:color,
-    submit: 0,
-    colorScheme:'dark',
-    onChange:function(hsb,hex,rgb,el,bySetColor) {
-      color = '#'+ hex;
-      update_scale();  
-	  }
-  });
-  
-  
+
+  };
+
+
+
+  /* -------------------------------------------------- CONTROLLER*/
+  var controller = {
+    init: function () {
+      model.init();
+      view.init();
+    },
+
+    getCenterColor: function () {
+      return model.getCenterColor();
+    },
+
+    getNumSteps: function () {
+      return model.getNumSteps();
+    },
+
+    getDarkScale: function () {
+      return model.getDarkScale();
+    },
+
+    getLightScale: function () {
+      return model.getLightScale();
+    },
+
+    randomizeColor: function() {
+      model.randomizeCenterColor();
+      view.render();
+    },
+
+    setCenterColor: function (color) {
+      model.setCenterColor(color);
+      view.render();
+    },
+    subCell: function () {
+      model.subStep();
+      view.render();
+    },
+    addCell: function () {
+      model.addStep();
+      view.render();
+    }
+  };
+
+
+
+
+  /* -------------------------------------------------------- VIEW*/
+  var view = {
+    init: function () {
+      this.$centerCell = $('.cell-middle');
+      this.$darkContainer = $('.dark-scale');
+      this.$lightContainer = $('.light-scale');
+
+      this.render();
+
+
+      $('#add-cell-btn').click(function() {
+        controller.addCell();
+      });
+
+      $('#sub-cell-btn').click(function() {
+        controller.subCell();
+      });
+
+      $('#random-color').click(function () {
+        controller.randomizeColor();
+      });
+
+      $('#save-scale-btn').click(function () {
+        // put oopy in saved list
+        var $sc = $('#playground-scale-container').clone();
+        $sc.children('.cell-middle').children('.cell-menu').remove();
+        var saveHtml = '</li class="saved-scale">' + $sc.html() + '</li>'
+        $('#saved-scales').append(saveHtml);
+      });
+
+      $('#clear-saved-btn').click(function() {
+        $('#saved-scales').html('');
+      })
+
+      // set color-picker dialog
+      $('.cell-middle #picked-color').colpick({
+        color:controller.getCenterColor(),
+        submit: 0,
+        colorScheme:'dark',
+        onChange:function(hsb,hex,rgb,el,bySetColor) {
+          color = '#'+ hex;
+          controller.setCenterColor(color);  
+        }
+      });
+
+
+    },
+
+    _setCellColor: function ($ele, color) {
+      $ele.css('background-color', color);
+      $ele.children('.color-code').html(color);
+    },
+
+    _addCells: function (num) {
+      // [ ] add cells to the right and left
+      var html_str = '';
+      for(var i=0;i<num;i++) {
+        html_str += '<div class="cell">';
+        html_str += '<div class="color-code"></div>';
+        html_str += '</div>';
+      }
+
+      this.$darkContainer.html(html_str);
+      this.$lightContainer.html(html_str);
+    },
+
+    _fill_scales: function (n) {
+      // color the newly created cells in dark
+      var darkScale = controller.getDarkScale();
+      var c;
+      for (var i=0; i<n; i++) {
+        $jq = this.$darkContainer.children('.cell:nth-child('+(i+1).toString()+')');
+        c = darkScale(i/n).hex();
+        this._setCellColor($jq, c);
+      }
+
+
+      // color the newly created cells in light
+      var lightScale = controller.getLightScale();
+      var c;
+      for (var i=0; i<n; i++) {
+        $jq = this.$lightContainer.children('.cell:nth-child('+(n-i).toString()+')');
+        c = lightScale(i/n).hex();
+        this._setCellColor($jq, c);
+      }
+    },
+
+    render: function () {
+      var n = controller.getNumSteps();
+
+      this._addCells(n);
+      this._setCellColor(this.$centerCell,controller.getCenterColor());
+
+
+      // set the cell widths so they all fit in a row
+      $('.playground .cell').css('width',(1/((n*2)+1)*100).toString() + '%');
+      this._fill_scales(n);
+
+    }
+  };
+
+  controller.init();
 });
-
