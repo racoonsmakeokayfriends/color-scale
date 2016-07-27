@@ -4,7 +4,7 @@ $(document).ready(function () {
   var model = {
 
     init: function() {
-      this.numSteps = 1;
+      this.numSteps = 2;
       this.centerColor = '#a4899d';
       this._updateColorScales();
     },
@@ -14,11 +14,7 @@ $(document).ready(function () {
       this.lightColor = chroma(this.centerColor).brighten().hex();
 
       this.darkScale = chroma.scale([this.darkColor, this.centerColor]);
-      this.lightScale = chroma.scale([this.centerColor, this.lightColor]);
-
-      console.log(this.darkColor);
-      console.log(this.centerColor);
-      console.log(this.lightColor);
+      this.lightScale = chroma.scale([this.lightColor, this.centerColor]);
 
     },
 
@@ -100,6 +96,11 @@ $(document).ready(function () {
       model.randomizeCenterColor();
       view.render();
     },
+
+    setCenterColor: function (color) {
+      model.setCenterColor(color);
+      view.render();
+    },
     subCell: function () {
       model.subStep();
       view.render();
@@ -116,17 +117,9 @@ $(document).ready(function () {
   /* -------------------------------------------------------- VIEW*/
   var view = {
     init: function () {
-      // [.] make $elements
-      // [ ] addEventListeners to add,sub,random,colpick,save
-      // [x] render self
-
-
       this.$centerCell = $('.cell-middle');
       this.$darkContainer = $('.dark-scale');
       this.$lightContainer = $('.light-scale');
-
-      this.$addBtn = $('#add-cell-btn');
-      this.$subBtn = $('#sub-cell-btn');
 
       this.render();
 
@@ -141,7 +134,30 @@ $(document).ready(function () {
 
       $('#random-color').click(function () {
         controller.randomizeColor();
+      });
+
+      $('#save-scale-btn').click(function () {
+        // put oopy in saved list
+        var $sc = $('#playground-scale-container').clone();
+        $sc.children('.cell-middle').children('.cell-menu').remove();
+        var saveHtml = '</li class="saved-scale">' + $sc.html() + '</li>'
+        $('#saved-scales').append(saveHtml);
+      });
+
+      $('#clear-saved-btn').click(function() {
+        $('#saved-scales').html('');
       })
+
+      // set color-picker dialog
+      $('.cell-middle #picked-color').colpick({
+        color:controller.getCenterColor(),
+        submit: 0,
+        colorScheme:'dark',
+        onChange:function(hsb,hex,rgb,el,bySetColor) {
+          color = '#'+ hex;
+          controller.setCenterColor(color);  
+        }
+      });
 
 
     },
@@ -164,19 +180,7 @@ $(document).ready(function () {
       this.$lightContainer.html(html_str);
     },
 
-    render: function () {
-      // [x] color center cell
-      // [ ] add appropriate number of cells to left and right
-      // [ ] color said cells
-      var n = controller.getNumSteps();
-
-      this._addCells(n);
-      this._setCellColor(this.$centerCell,controller.getCenterColor());
-
-
-      // set the cell widths so they all fit in a row
-      $('.playground .cell').css('width',(1/((n*2)+1)*100).toString() + '%');
-
+    _fill_scales: function (n) {
       // color the newly created cells in dark
       var darkScale = controller.getDarkScale();
       var c;
@@ -190,11 +194,24 @@ $(document).ready(function () {
       // color the newly created cells in light
       var lightScale = controller.getLightScale();
       var c;
-      for (var i=n-1; i>0; i++) {
-        $jq = this.$lightContainer.children('.cell:nth-child('+(i+1).toString()+')');
-        c = lightScale((n-i)/(n)).hex();
+      for (var i=0; i<n; i++) {
+        $jq = this.$lightContainer.children('.cell:nth-child('+(n-i).toString()+')');
+        c = lightScale(i/n).hex();
         this._setCellColor($jq, c);
       }
+    },
+
+    render: function () {
+      var n = controller.getNumSteps();
+
+      this._addCells(n);
+      this._setCellColor(this.$centerCell,controller.getCenterColor());
+
+
+      // set the cell widths so they all fit in a row
+      $('.playground .cell').css('width',(1/((n*2)+1)*100).toString() + '%');
+      this._fill_scales(n);
+
     }
   };
 

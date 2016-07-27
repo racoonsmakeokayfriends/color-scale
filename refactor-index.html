@@ -23,7 +23,7 @@
     <main>
       <section class="playground">
 
-        <div class="container">
+        <div class="container" id="playground-scale-container">
           
           <!-- The Dark Side -->
           <div class="container dark-scale">
@@ -68,10 +68,13 @@
       <section class="output">
         <div class="container">
           
-          <button id='save_scale'>
+          <button id='save-scale-btn'>
             <i class='fa fa-floppy-o'></i>
           </button>
-          <button class="output" id="out-scss">
+          <button id="clear-saved-btn">
+            <i class="fa fa-trash"></i>
+          </button>
+<!--           <button class="output" id="out-scss">
             scss
           </button>
           <button class="output" id="out-dash">
@@ -79,11 +82,14 @@
           </button>
           <button class="output" id="out-list">
             list
-          </button>
-          <input readonly id="scale-output"/>
+          </button> 
+          <input readonly id="scale-output"/>-->
         </div>
-        <div class='container' id='saved_scales'>
+        <div class='container'>
           <h1>Saved Scales:</h1>
+          <ul id='saved-scales'>
+            
+          </ul>
         </div>
       </section>
 
